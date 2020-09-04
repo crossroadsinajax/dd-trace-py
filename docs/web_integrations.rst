@@ -35,6 +35,14 @@ Bottle
 
 .. automodule:: ddtrace.contrib.bottle
 
+
+.. _cyclone:
+
+Cyclone
+^^^^^^^
+.. automodule:: ddtrace.contrib.cyclone
+
+
 .. _djangorestframework:
 .. _django:
 
