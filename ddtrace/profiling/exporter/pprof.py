@@ -80,7 +80,9 @@ class _PprofConverter(object):
             return self._functions[(filename, funcname)]
         except KeyError:
             func = pprof_pb2.Function(
-                id=self._last_func_id.generate(), name=self._str(funcname), filename=self._str(filename),
+                id=self._last_func_id.generate(),
+                name=self._str(funcname),
+                filename=self._str(filename),
             )
             self._functions[(filename, funcname)] = func
             return func
@@ -95,7 +97,12 @@ class _PprofConverter(object):
                 real_funcname = funcname
             location = pprof_pb2.Location(
                 id=self._last_location_id.generate(),
-                line=[pprof_pb2.Line(function_id=self._to_Function(filename, real_funcname).id, line=lineno,),],
+                line=[
+                    pprof_pb2.Line(
+                        function_id=self._to_Function(filename, real_funcname).id,
+                        line=lineno,
+                    ),
+                ],
             )
             self._locations[(filename, lineno, funcname)] = location
             return location
@@ -203,7 +210,12 @@ class _PprofConverter(object):
         return pprof_pb2.Profile(
             sample_type=pprof_sample_type,
             sample=sample,
-            mapping=[pprof_pb2.Mapping(id=1, filename=self._str(program_name),),],
+            mapping=[
+                pprof_pb2.Mapping(
+                    id=1,
+                    filename=self._str(program_name),
+                ),
+            ],
             # Sort location and function by id so the output is reproducible
             location=sorted(self._locations.values(), key=_ATTRGETTER_ID),
             function=sorted(self._functions.values(), key=_ATTRGETTER_ID),
@@ -253,14 +265,20 @@ class PprofExporter(exporter.Exporter):
         )
 
     def _group_stack_events(self, events):
-        return itertools.groupby(sorted(events, key=self._stack_event_group_key), key=self._stack_event_group_key,)
+        return itertools.groupby(
+            sorted(events, key=self._stack_event_group_key),
+            key=self._stack_event_group_key,
+        )
 
     @staticmethod
     def _lock_event_group_key(event):
         return (event.lock_name, event.thread_id, str(event.thread_name), tuple(event.frames), event.nframes)
 
     def _group_lock_events(self, events):
-        return itertools.groupby(sorted(events, key=self._lock_event_group_key), key=self._lock_event_group_key,)
+        return itertools.groupby(
+            sorted(events, key=self._lock_event_group_key),
+            key=self._lock_event_group_key,
+        )
 
     def _stack_exception_group_key(self, event):
         exc_type = event.exc_type
@@ -277,7 +295,8 @@ class PprofExporter(exporter.Exporter):
 
     def _group_stack_exception_events(self, events):
         return itertools.groupby(
-            sorted(events, key=self._stack_exception_group_key), key=self._stack_exception_group_key,
+            sorted(events, key=self._stack_exception_group_key),
+            key=self._stack_exception_group_key,
         )
 
     @staticmethod
@@ -287,7 +306,10 @@ class PprofExporter(exporter.Exporter):
         return (event.thread_id, str(event.thread_name), tuple(event.frames), event.nframes, exc_type_name)
 
     def _group_exception_events(self, events):
-        return itertools.groupby(sorted(events, key=self._exception_group_key), key=self._exception_group_key,)
+        return itertools.groupby(
+            sorted(events, key=self._exception_group_key),
+            key=self._exception_group_key,
+        )
 
     @staticmethod
     def min_none(a, b):
@@ -354,9 +376,10 @@ class PprofExporter(exporter.Exporter):
                     convert_fn(lock_name, thread_id, thread_name, frames, nframes, list(l_events), sampling_ratio_avg)
 
         # Handle UncaughtExceptionEvent
-        for ((thread_id, thread_name, frames, nframes, exc_type_name), ue_events,) in self._group_exception_events(
-            events.get(exceptions.UncaughtExceptionEvent, [])
-        ):
+        for (
+            (thread_id, thread_name, frames, nframes, exc_type_name),
+            ue_events,
+        ) in self._group_exception_events(events.get(exceptions.UncaughtExceptionEvent, [])):
             converter.convert_uncaught_exception_event(
                 thread_id, thread_name, frames, nframes, exc_type_name, list(ue_events)
             )

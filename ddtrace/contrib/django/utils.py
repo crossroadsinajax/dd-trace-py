@@ -89,5 +89,12 @@ def get_request_uri(request):
     # Build request url from the information available
     # DEV: We are explicitly omitting query strings since they may contain sensitive information
     return parse.urlunparse(
-        parse.ParseResult(scheme=request.scheme, netloc=host, path=request.path, params="", query="", fragment="",)
+        parse.ParseResult(
+            scheme=request.scheme,
+            netloc=host,
+            path=request.path,
+            params="",
+            query="",
+            fragment="",
+        )
     )

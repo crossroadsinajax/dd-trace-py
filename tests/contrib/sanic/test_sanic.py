@@ -83,8 +83,16 @@ def integration_config(request):
 
 
 @pytest.fixture(
-    params=[dict(), dict(trace_query_string=False), dict(trace_query_string=True),],
-    ids=["default", "disable trace query string", "enable trace query string",],
+    params=[
+        dict(),
+        dict(trace_query_string=False),
+        dict(trace_query_string=True),
+    ],
+    ids=[
+        "default",
+        "disable trace query string",
+        "enable trace query string",
+    ],
 )
 def integration_http_config(request):
     return request.param
@@ -200,7 +208,10 @@ async def test_exception(tracer, client):
 
 @pytest.mark.asyncio
 async def test_multiple_requests(tracer, client):
-    responses = await asyncio.gather(client.get("/hello"), client.get("/hello"),)
+    responses = await asyncio.gather(
+        client.get("/hello"),
+        client.get("/hello"),
+    )
 
     assert len(responses) == 2
     assert [r.status_code for r in responses] == [200] * 2

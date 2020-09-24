@@ -164,7 +164,9 @@ setup(
         ext_modules=cythonize(
             [
                 Cython.Distutils.Extension(
-                    "ddtrace.internal._rand", sources=["ddtrace/internal/_rand.pyx"], language="c",
+                    "ddtrace.internal._rand",
+                    sources=["ddtrace/internal/_rand.pyx"],
+                    language="c",
                 ),
                 Extension(
                     "ddtrace.internal._encoding",
@@ -174,7 +176,9 @@ setup(
                     define_macros=encoding_macros,
                 ),
                 Cython.Distutils.Extension(
-                    "ddtrace.internal._queue", sources=["ddtrace/internal/_queue.pyx"], language="c",
+                    "ddtrace.internal._queue",
+                    sources=["ddtrace/internal/_queue.pyx"],
+                    language="c",
                 ),
                 Cython.Distutils.Extension(
                     "ddtrace.profiling.collector.stack",
@@ -193,7 +197,9 @@ setup(
                     language="c",
                 ),
                 Cython.Distutils.Extension(
-                    "ddtrace.profiling._build", sources=["ddtrace/profiling/_build.pyx"], language="c",
+                    "ddtrace.profiling._build",
+                    sources=["ddtrace/profiling/_build.pyx"],
+                    language="c",
                 ),
             ],
             compile_time_env={
